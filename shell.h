@@ -11,6 +11,8 @@
 
 extern char **environ;
 void loop(char **argv);
+ssize_t handle_input(char **line, size_t *len, char **argv);
+void process_command(char **args, char **argv, int count);
 char **parse_line(char *line);
 int execute(char **args);
 char *find_path(char *cmd);

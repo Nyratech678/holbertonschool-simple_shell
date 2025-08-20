@@ -3,7 +3,8 @@
 /**
  * display_prompt - Displays the shell prompt.
  *
- * This function writes the prompt string to standard output.
+ * Description: This function writes the prompt string to standard output.
+ * Return: Nothing
  */
 void display_prompt(void)
 {

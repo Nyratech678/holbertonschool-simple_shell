@@ -1,21 +1,141 @@
-./"Manpage for Simple Shell project Holbertonschool
-./"
-.MD man page 1 "11/08/2025" "1.0" "SIMPLE_SHELL_PROJECT MAN PAGE"
-.SH NAME
-.SIMPLE SHELL
+.TH SIMPLE_SHELL 1 "August 2025" "1.0" "Simple Shell Manual"
 
-/- A simple UNIX command interpreter.
+.SH NAME
+hsh \- simple UNIX command interpreter
 
 .SH SYNOPSIS
+.B hsh
+[
+.I command_string
+]
 
+.SH DESCRIPTION
+.B hsh
+is a simple UNIX command line interpreter that reads commands from either
+the standard input or from a file and executes them.
 
+.B hsh
+conforms to the POSIX specification for shells, with some limitations.
 
+.SH INVOCATION
+.B hsh
+can be invoked both interactively and non-interactively. If
+.B hsh
+is invoked with standard input not connected to a terminal, it reads and
+executes received commands in order.
 
+If
+.B hsh
+is invoked with standard input connected to a terminal (determined by
+.BR isatty (3)),
+an interactive shell is opened. When executing interactively,
+.B hsh
+displays the prompt
+.B $
+when it is ready to read a command.
 
+.SH COMMAND EXECUTION
+After receiving a command,
+.B hsh
+tokenizes it into words using
+.B " "
+(space) as a delimiter. The first word is treated as the command and the
+remaining words are treated as arguments to that command.
+.B hsh
+then proceeds with the following actions:
 
-.SH Description
-A Unix command interpreter (shell) is a program that reads, parses, and executes commands entered by the user, serving as an interface between the user and the operating system.
+1. If the command is a shell builtin, the builtin is executed.
 
-.SH RETURN VALUE
-In the Unix shell, a function returns a status code (0 = success, other = error) via `return`, and can pass a real value by printing it to standard output, retrievable by command substitution.
+2. If the command contains a slash
+.BR / ,
+.B hsh
+assumes it is the pathname of the command and attempts to execute it.
+
+3. If the command does not contain a slash,
+.B hsh
+searches for it in the directories listed in the
+.B PATH
+environment variable. If found, the command is executed.
+
+4. If the command is not found,
+.B hsh
+prints an error message and returns to the prompt.
+
+.SH BUILTIN COMMANDS
+The following builtin commands are supported:
+
+.TP
+.B env
+Print the current environment variables.
+
+.TP
+.B exit
+Cause
+.B hsh
+to exit. No status argument is supported.
+
+.SH ENVIRONMENT
+.B hsh
+inherits the environment from its parent process and makes it available
+to child processes.
+
+.TP
+.B PATH
+A colon-separated list of directories in which the shell looks for commands.
+
+.SH EXIT STATUS
+.B hsh
+returns the exit status of the last command executed, unless a syntax
+error occurs, in which case it exits with a non-zero status.
+
+.SH EXAMPLES
+Run
+.B hsh
+in interactive mode:
+.PP
+.RS
+$ ./hsh
+.br
+$ ls
+.br
+file1 file2 directory1
+.br
+$ exit
+.br
+$
+.RE
+
+Run
+.B hsh
+in non-interactive mode:
+.PP
+.RS
+$ echo "ls" | ./hsh
+.br
+file1 file2 directory1
+.br
+$
+.RE
+
+.SH SEE ALSO
+.BR sh (1),
+.BR bash (1),
+.BR dash (1),
+.BR execve (2),
+.BR fork (2),
+.BR wait (2),
+.BR getline (3),
+.BR strtok (3),
+.BR environ (7)
+
+.SH BUGS
+No known bugs at this time. Report bugs to the authors.
+
+.SH AUTHORS
+Written by Nyratech678 for Holberton School.
+
+.SH COPYRIGHT
+This is free software; see the source for copying conditions.
+There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.
 

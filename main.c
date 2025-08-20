@@ -9,11 +9,11 @@
  * Description: Initializes program name and starts the main shell loop.
  * Return: 0 on success, or an error code on failure.
  */
-
 int main(int argc, char **argv, char **envp)
 {
 	(void)argc;
-	(void) envp;
+	(void)envp;
+
 	loop(argv);
 	return (0);
 }
