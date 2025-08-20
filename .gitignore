@@ -1,0 +1,26 @@
+# Compiled files
+*.o
+hsh
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*~
+*.swp
+*.swo
+
+# Log files
+*.log
+
+# Core dumps
+core
+core.*
+
+# Valgrind files
+vgcore.*
+
+# Test output files
+test_output.txt
+*.out

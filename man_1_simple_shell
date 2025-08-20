@@ -1,0 +1,21 @@
+./"Manpage for Simple Shell project Holbertonschool
+./"
+.MD man page 1 "11/08/2025" "1.0" "SIMPLE_SHELL_PROJECT MAN PAGE"
+.SH NAME
+.SIMPLE SHELL
+
+/- A simple UNIX command interpreter.
+
+.SH SYNOPSIS
+
+
+
+
+
+
+.SH Description
+A Unix command interpreter (shell) is a program that reads, parses, and executes commands entered by the user, serving as an interface between the user and the operating system.
+
+.SH RETURN VALUE
+In the Unix shell, a function returns a status code (0 = success, other = error) via `return`, and can pass a real value by printing it to standard output, retrievable by command substitution.
+
