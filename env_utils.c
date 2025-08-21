@@ -1,43 +1,64 @@
 #include "shell.h"
 
 /**
- * _getenv - Retrieves the value of an environment variable
- * @name: Name of the environment variable
- *
- * Return: Pointer to the value (do not free), or NULL if not found
+ * _getenv - Get environment variable
+ * @name: Variable name
+ * Return: Variable value or NULL
  */
 char *_getenv(const char *name)
 {
-	int i;
+	int i = 0;
+	int name_len;
 
-	if (name == NULL || *name == '\0')
+	if (!name || !environ)
 		return (NULL);
 
-	if (strchr(name, '=') != NULL)
-		return (NULL);
+	name_len = _strlen(name);
 
-	for (i = 0; environ[i] != NULL; i++)
+	while (environ[i])
 	{
-		if (strncmp(environ[i], name, strlen(name)) == 0 &&
-		    environ[i][strlen(name)] == '=')
-		{
-			return (&environ[i][strlen(name) + 1]);
-		}
+		if (_strncmp(environ[i], name, name_len) == 0 && environ[i][name_len] == '=')
+			return (environ[i] + name_len + 1);
+		i++;
 	}
 	return (NULL);
 }
 
 /**
- * print_env - Prints all environment variables
- *
- * Return: Nothing
+ * print_env - Print environment variables
  */
 void print_env(void)
 {
-	int i;
+	int i = 0;
 
-	for (i = 0; environ[i] != NULL; i++)
+	if (!environ)
+		return;
+
+	while (environ[i])
 	{
 		printf("%s\n", environ[i]);
+		i++;
 	}
+}
+
+/**
+ * _strncmp - Compare n characters of strings
+ * @s1: First string
+ * @s2: Second string
+ * @n: Number of characters
+ * Return: 0 if equal
+ */
+static int _strncmp(const char *s1, const char *s2, int n)
+{
+	int i = 0;
+
+	while (i < n && s1[i] && s2[i])
+	{
+		if (s1[i] != s2[i])
+			return (s1[i] - s2[i]);
+		i++;
+	}
+	if (i < n)
+		return (s1[i] - s2[i]);
+	return (0);
 }
