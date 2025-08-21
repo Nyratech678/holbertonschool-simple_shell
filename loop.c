@@ -21,11 +21,9 @@ ssize_t handle_input(char **line, size_t *len, char **argv)
 	{
 		if (feof(stdin))
 		{
-			free(*line);
 			return (-1);
 		}
 		perror(argv[0]);
-		free(*line);
 		return (-1);
 	}
 
@@ -37,23 +35,25 @@ ssize_t handle_input(char **line, size_t *len, char **argv)
  * @args: parsed command arguments
  * @argv: program arguments
  * @count: command counter
+ * @line: the input line to free on exit
  *
- * Return: Nothing
+ * Return: 1 if should exit, 0 otherwise
  */
-void process_command(char **args, char **argv, int count)
+int process_command(char **args, char **argv, int count, char *line)
 {
 	if (args == NULL)
-		return;
+		return (0);
 
 	if (args[0] == NULL)
 	{
 		free_args(args);
-		return;
+		return (0);
 	}
 
 	if (strcmp(args[0], "exit") == 0)
 	{
 		free_args(args);
+		free(line);
 		exit(EXIT_SUCCESS);
 	}
 
@@ -61,6 +61,7 @@ void process_command(char **args, char **argv, int count)
 		print_error(argv[0], args[0], count, "not found");
 
 	free_args(args);
+	return (0);
 }
 
 /**
@@ -86,7 +87,7 @@ void loop(char **argv)
 			break;
 
 		args = parse_line(line);
-		process_command(args, argv, count);
+		process_command(args, argv, count, line);
 	}
 
 	free(line);

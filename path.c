@@ -14,22 +14,24 @@ char *find_path(char *cmd)
 	char *full_path = NULL;
 
 	if (access(cmd, X_OK) == 0)
-		return (strdup(cmd));
+		return (_strdup(cmd));
 
 	if (!path)
 		return (NULL);
 
-	path_copy = strdup(path);
+	path_copy = _strdup(path);
 	if (!path_copy)
 		return (NULL);
 
 	dir = strtok(path_copy, ":");
 	while (dir != NULL)
 	{
-		full_path = malloc(strlen(dir) + strlen(cmd) + 2);
+		full_path = malloc(_strlen(dir) + _strlen(cmd) + 2);
 		if (full_path)
 		{
-			sprintf(full_path, "%s/%s", dir, cmd);
+			_strcpy(full_path, dir);
+			_strcat(full_path, "/");
+			_strcat(full_path, cmd);
 			if (access(full_path, X_OK) == 0)
 			{
 				free(path_copy);

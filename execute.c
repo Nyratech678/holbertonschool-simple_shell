@@ -30,21 +30,23 @@ int execute(char **args)
 	pid = fork();
 	if (pid == 0)
 	{
+		/* Child process - execute the command */
 		if (execve(full_path, args, environ) == -1)
 		{
 			perror(args[0]);
-			free(full_path);
-			exit(EXIT_FAILURE);
+			_exit(EXIT_FAILURE);
 		}
 	}
 	else if (pid < 0)
 	{
+		/* Fork failed */
 		perror("fork");
 		free(full_path);
 		return (-1);
 	}
 	else
 	{
+		/* Parent process - wait for child */
 		do {
 			waitpid(pid, &status, WUNTRACED);
 		} while (!WIFEXITED(status) && !WIFSIGNALED(status));

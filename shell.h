@@ -12,7 +12,7 @@
 extern char **environ;
 void loop(char **argv);
 ssize_t handle_input(char **line, size_t *len, char **argv);
-void process_command(char **args, char **argv, int count);
+int process_command(char **args, char **argv, int count, char *line);
 char **parse_line(char *line);
 int execute(char **args);
 char *find_path(char *cmd);
@@ -25,6 +25,7 @@ void display_prompt(void);
 int _strlen(const char *s);
 char *_strdup(const char *s);
 char *_strcpy(char *dest, const char *src);
+char *_strcat(char *dest, const char *src);
 int _strcmp(const char *s1, const char *s2);
 char *read_input(void);
 

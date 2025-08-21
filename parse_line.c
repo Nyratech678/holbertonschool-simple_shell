@@ -24,7 +24,7 @@ char **parse_line(char *line)
 	token = strtok(line, " \t\r\n");
 	while (token != NULL && i < (MAX_ARGS - 1))
 	{
-		tokens[i] = strdup(token);
+		tokens[i] = _strdup(token);
 		if (tokens[i] == NULL)
 		{
 			free_args(tokens);
