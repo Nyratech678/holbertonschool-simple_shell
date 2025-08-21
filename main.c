@@ -46,6 +46,9 @@ int main(int argc, char **argv)
 		{
 			char *trimmed = line;
 			int len;
+			char *args[1024];
+			int argc = 0;
+			char *token;
 			
 			while (*trimmed == ' ' || *trimmed == '\t')
 				trimmed++;
@@ -60,15 +63,25 @@ int main(int argc, char **argv)
 				len--;
 			}
 
+			/* Parse arguments */
+			token = strtok(trimmed, " \t");
+			while (token != NULL && argc < 1023)
+			{
+				args[argc] = token;
+				argc++;
+				token = strtok(NULL, " \t");
+			}
+			args[argc] = NULL;
+
+			if (argc == 0)
+				continue;
+
 			/* Fork and execute */
 			pid = fork();
 			if (pid == 0)
 			{
 				/* Child process */
-				char *args[2];
-				args[0] = trimmed;
-				args[1] = NULL;
-				if (execve(trimmed, args, environ) == -1)
+				if (execve(args[0], args, environ) == -1)
 				{
 					fprintf(stderr, "%s: No such file or directory\n", argv[0]);
 					_exit(127);
