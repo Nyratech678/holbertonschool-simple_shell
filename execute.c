@@ -4,33 +4,20 @@
 #include <unistd.h>
 
 /**
- * execute - forks a process to execute a command
- * @args: The arguments for the command
+ * launch_process - Creates a child process and executes command
+ * @full_path: The path to the executable command
+ * @args: Arguments for the command
  *
  * Return: 1 on success, -1 on failure
  */
-int execute(char **args)
+int launch_process(char *full_path, char **args)
 {
 	pid_t pid;
 	int status;
-	char *full_path;
-
-	if (args == NULL || args[0] == NULL)
-		return (1);
-
-	/* Handle built-in commands */
-	if (handle_builtin(args))
-		return (1);
-
-	/* Find the full path of the command */
-	full_path = find_path(args[0]);
-	if (full_path == NULL)
-		return (-1);
 
 	pid = fork();
 	if (pid == 0)
 	{
-		/* Child process - execute the command */
 		if (execve(full_path, args, environ) == -1)
 		{
 			perror(args[0]);
@@ -39,18 +26,39 @@ int execute(char **args)
 	}
 	else if (pid < 0)
 	{
-		/* Fork failed */
 		perror("fork");
 		free(full_path);
 		return (-1);
 	}
 	else
 	{
-		/* Parent process - wait for child */
 		do {
 			waitpid(pid, &status, WUNTRACED);
 		} while (!WIFEXITED(status) && !WIFSIGNALED(status));
 		free(full_path);
 	}
 	return (1);
+}
+
+/**
+ * execute - Handles execution of builtins or external commands
+ * @args: The arguments for the command
+ *
+ * Return: 1 on success, -1 on failure
+ */
+int execute(char **args)
+{
+	char *full_path;
+
+	if (args == NULL || args[0] == NULL)
+		return (1);
+
+	if (handle_builtin(args))
+		return (1);
+
+	full_path = find_path(args[0]);
+	if (full_path == NULL)
+		return (-1);
+
+	return (launch_process(full_path, args));
 }
