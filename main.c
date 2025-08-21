@@ -2,28 +2,15 @@
 
 /**
  * main - Entry point of the simple shell
+ * @argc: Number of arguments
+ * @argv: Array of arguments
  *
  * Return: Always 0
  */
-int main(void)
+int main(int argc, char **argv)
 {
-	char *line = NULL;
-	size_t len = 0;
-	ssize_t read;
+	(void)argc;
 
-	while (1)
-	{
-		display_prompt();
-		read = getline(&line, &len, stdin);
-		if (read == -1) /* EOF (Ctrl+D) */
-		{
-			free(line);
-			write(STDOUT_FILENO, "\n", 1);
-			exit(0);
-		}
-		execute_command(line);
-	}
-
-	free(line);
+	loop(argv);
 	return (0);
 }
