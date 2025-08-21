@@ -134,6 +134,13 @@ int main(int argc, char **argv)
 			if (argc == 0)
 				continue;
 
+			/* Handle built-in commands */
+			if (_strcmp(args[0], "exit") == 0)
+			{
+				free(line);
+				exit(0);
+			}
+
 			/* Find command in PATH */
 			cmd_path = find_command(args[0]);
 			if (!cmd_path)
