@@ -69,6 +69,8 @@ int execute(char **args)
 	{
 		/* Parent process */
 		wait(&status);
+		if (WIFEXITED(status) && WEXITSTATUS(status) == 127)
+			return (-1);
 	}
 	return (1);
 }

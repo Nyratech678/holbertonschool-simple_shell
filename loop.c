@@ -12,9 +12,6 @@ ssize_t handle_input(char **line, size_t *len, char **argv)
 {
 	ssize_t read;
 
-	if (isatty(STDIN_FILENO))
-		printf("$ ");
-
 	read = getline(line, len, stdin);
 
 	if (read == -1)
@@ -41,26 +38,24 @@ ssize_t handle_input(char **line, size_t *len, char **argv)
  */
 int process_command(char **args, char **argv, int count, char *line)
 {
+	(void)line;
+
 	if (args == NULL)
 		return (0);
 
 	if (args[0] == NULL)
 	{
-		free_args(args);
 		return (0);
 	}
 
 	if (strcmp(args[0], "exit") == 0)
 	{
-		free_args(args);
-		free(line);
 		exit(EXIT_SUCCESS);
 	}
 
 	if (execute(args) == -1)
 		print_error(argv[0], args[0], count, "not found");
 
-	free_args(args);
 	return (0);
 }
 
@@ -97,7 +92,7 @@ void loop(char **argv)
 		args = parse_line(line);
 		if (args && args[0])
 		{
-			status = process_command(args, argv, count, line);
+			process_command(args, argv, count, line);
 		}
 		free_args(args);
 	}
