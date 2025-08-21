@@ -65,30 +65,41 @@ int process_command(char **args, char **argv, int count, char *line)
 }
 
 /**
- * loop - Main loop of the shell
- * @argv: command line arguments
- *
- * Description: Continuously displays a prompt, reads user input,
- * and processes commands until EOF (Ctrl+D) or an error occurs.
- * Return: Nothing.
+ * loop - Main shell loop
+ * @argv: Program arguments for error messages
  */
 void loop(char **argv)
 {
 	char *line = NULL;
 	size_t len = 0;
+	ssize_t read;
 	char **args;
-	int count = 0;
+	int status = 1;
+	unsigned int count = 0;
 
-	while (1)
+	while (status)
 	{
 		count++;
+		if (isatty(STDIN_FILENO))
+			display_prompt();
 
-		if (handle_input(&line, &len, argv) == -1)
+		read = getline(&line, &len, stdin);
+		if (read == -1)
+		{
+			if (isatty(STDIN_FILENO))
+				write(STDOUT_FILENO, "\n", 1);
 			break;
+		}
+
+		if (line[read - 1] == '\n')
+			line[read - 1] = '\0';
 
 		args = parse_line(line);
-		process_command(args, argv, count, line);
+		if (args && args[0])
+		{
+			status = process_command(args, argv, count, line);
+		}
+		free_args(args);
 	}
-
 	free(line);
 }

@@ -41,24 +41,34 @@ int launch_process(char *full_path, char **args)
 }
 
 /**
- * execute - Handles execution of builtins or external commands
- * @args: The arguments for the command
- *
- * Return: 1 on success, -1 on failure
+ * execute - Execute a command
+ * @args: Command arguments
+ * Return: 1 to continue, 0 to exit
  */
 int execute(char **args)
 {
-	char *full_path;
+	pid_t pid;
+	int status;
 
-	if (args == NULL || args[0] == NULL)
+	if (!args || !args[0])
 		return (1);
 
-	if (handle_builtin(args))
+	pid = fork();
+	if (pid == 0)
+	{
+		/* Child process */
+		if (execve(args[0], args, environ) == -1)
+			exit(127);
+	}
+	else if (pid < 0)
+	{
+		perror("fork");
 		return (1);
-
-	full_path = find_path(args[0]);
-	if (full_path == NULL)
-		return (-1);
-
-	return (launch_process(full_path, args));
+	}
+	else
+	{
+		/* Parent process */
+		wait(&status);
+	}
+	return (1);
 }

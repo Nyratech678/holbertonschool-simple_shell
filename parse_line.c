@@ -1,38 +1,25 @@
 #include "shell.h"
 
-#define MAX_ARGS 64
-
 /**
- * parse_line - Tokenizes the input line into an array of arguments
- * @line: The input string to tokenize
- *
- * Return: Pointer to an array of strings (tokens), or NULL on failure
+ * parse_line - Parse input line into arguments
+ * @line: Input line to parse
+ * Return: Array of arguments
  */
 char **parse_line(char *line)
 {
-	char **tokens = NULL;
-	char *token = NULL;
-	int i = 0;
+	char **args = malloc(2 * sizeof(char *));
 
-	if (line == NULL || *line == '\0')
+	if (!args)
 		return (NULL);
 
-	tokens = malloc(MAX_ARGS * sizeof(char *));
-	if (tokens == NULL)
-		return (NULL);
-
-	token = strtok(line, " \t\r\n");
-	while (token != NULL && i < (MAX_ARGS - 1))
+	if (!line || *line == '\0')
 	{
-		tokens[i] = _strdup(token);
-		if (tokens[i] == NULL)
-		{
-			free_args(tokens);
-			return (NULL);
-		}
-		i++;
-		token = strtok(NULL, " \t\r\n");
+		args[0] = NULL;
+		return (args);
 	}
-	tokens[i] = NULL;
-	return (tokens);
+
+	args[0] = _strdup(line);
+	args[1] = NULL;
+
+	return (args);
 }

@@ -1,22 +1,17 @@
 #include "shell.h"
 
 /**
- * free_args - Frees an array of strings.
- * @args: The array of strings to free.
- *
- * Return: Nothing
+ * free_args - Free argument array
+ * @args: Array to free
  */
 void free_args(char **args)
 {
-	char **temp = args;
+	int i;
 
 	if (!args)
 		return;
 
-	while (*temp)
-	{
-		free(*temp);
-		temp++;
-	}
+	for (i = 0; args[i]; i++)
+		free(args[i]);
 	free(args);
 }
