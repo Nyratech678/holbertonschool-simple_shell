@@ -141,6 +141,12 @@ int main(int argc, char **argv)
 				exit(0);
 			}
 
+			if (_strcmp(args[0], "env") == 0)
+			{
+				print_env();
+				continue;
+			}
+
 			/* Find command in PATH */
 			cmd_path = find_command(args[0]);
 			if (!cmd_path)
