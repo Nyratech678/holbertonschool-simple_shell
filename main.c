@@ -13,18 +13,15 @@ int main(int argc, char **argv)
 	ssize_t read;
 	pid_t pid;
 	int status;
-	unsigned int count = 0;
 
 	(void)argc;
 
 	while (1)
 	{
-		count++;
-
 		/* Display prompt only in interactive mode */
 		if (isatty(STDIN_FILENO))
 		{
-			write(STDOUT_FILENO, "($) ", 4);
+			write(STDOUT_FILENO, "#cisfun$ ", 9);
 			fflush(stdout);
 		}
 
@@ -41,36 +38,51 @@ int main(int argc, char **argv)
 		if (line[read - 1] == '\n')
 			line[read - 1] = '\0';
 
-		/* Skip empty lines */
+		/* Skip empty lines and trim spaces */
 		if (line[0] == '\0')
 			continue;
 
-		/* Handle exit */
-		if (_strcmp(line, "exit") == 0)
-			break;
+		/* Trim leading and trailing spaces */
+		{
+			char *trimmed = line;
+			int len;
+			
+			while (*trimmed == ' ' || *trimmed == '\t')
+				trimmed++;
+			
+			if (*trimmed == '\0')
+				continue;
 
-		/* Fork and execute */
-		pid = fork();
-		if (pid == 0)
-		{
-			/* Child process */
-			char *args[2];
-			args[0] = line;
-			args[1] = NULL;
-			if (execve(line, args, environ) == -1)
+			len = strlen(trimmed);
+			while (len > 0 && (trimmed[len - 1] == ' ' || trimmed[len - 1] == '\t'))
 			{
-				fprintf(stderr, "%s: %u: %s: not found\n", argv[0], count, line);
-				_exit(127);
+				trimmed[len - 1] = '\0';
+				len--;
 			}
-		}
-		else if (pid < 0)
-		{
-			perror("fork");
-		}
-		else
-		{
-			/* Parent process */
-			wait(&status);
+
+			/* Fork and execute */
+			pid = fork();
+			if (pid == 0)
+			{
+				/* Child process */
+				char *args[2];
+				args[0] = trimmed;
+				args[1] = NULL;
+				if (execve(trimmed, args, environ) == -1)
+				{
+					fprintf(stderr, "%s: No such file or directory\n", argv[0]);
+					_exit(127);
+				}
+			}
+			else if (pid < 0)
+			{
+				perror("fork");
+			}
+			else
+			{
+				/* Parent process */
+				wait(&status);
+			}
 		}
 	}
 
