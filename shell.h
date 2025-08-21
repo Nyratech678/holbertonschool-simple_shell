@@ -27,6 +27,7 @@ char *_strdup(const char *s);
 char *_strcpy(char *dest, const char *src);
 char *_strcat(char *dest, const char *src);
 int _strcmp(const char *s1, const char *s2);
+int _strncmp(const char *s1, const char *s2, int n);
 char *read_input(void);
 
 #endif /* SHELL_H */
