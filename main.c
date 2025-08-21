@@ -1,19 +1,29 @@
 #include "shell.h"
 
 /**
- * main - Entry point for the simple shell program
- * @argc: Number of command-line arguments
- * @argv: Array of command-line arguments
- * @envp: Array of environment variables
+ * main - Entry point of the simple shell
  *
- * Description: Initializes program name and starts the main shell loop.
- * Return: 0 on success, or an error code on failure.
+ * Return: Always 0
  */
-int main(int argc, char **argv, char **envp)
+int main(void)
 {
-	(void)argc;
-	(void)envp;
+	char *line = NULL;
+	size_t len = 0;
+	ssize_t read;
 
-	loop(argv);
+	while (1)
+	{
+		display_prompt();
+		read = getline(&line, &len, stdin);
+		if (read == -1) /* EOF (Ctrl+D) */
+		{
+			free(line);
+			write(STDOUT_FILENO, "\n", 1);
+			exit(0);
+		}
+		execute_command(line);
+	}
+
+	free(line);
 	return (0);
 }
